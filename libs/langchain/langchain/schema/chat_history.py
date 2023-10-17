@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import json
 from abc import ABC, abstractmethod
 from typing import List
 
-from langchain.schema.messages import AIMessage, BaseMessage, HumanMessage
-import json
+from langchain.schema.messages import (
+    AIMessage,
+    BaseMessage,
+    HumanMessage,
+    messages_from_dict,
+    messages_to_dict,
+)
+
 
 class BaseChatMessageHistory(ABC):
     """Abstract base class for storing chat message history.
@@ -67,24 +74,24 @@ class BaseChatMessageHistory(ABC):
         """Remove all messages from the store"""
 
     def toJSON(self) -> str:
-        return json.dumps(self, default=lambda o: o.__dict__,
-            sort_keys=True, indent=4)
+        obj_dict = vars(self)
+        serialized_dict = {
+            key: messages_to_dict(value) if key == 'messages' else value
+            for key, value in obj_dict.items()
+        }
+
+        return json.dumps(serialized_dict, sort_keys=True, indent=4)
 
     @classmethod
     def fromJSON(cls, json_input: str) -> None:
         memory_dict = json.loads(json_input)
 
-        # Create a mapping from type names to message classes
-        message_type_mapping = {
-            'human': HumanMessage,
-            'ai': AIMessage
-        }
-
-        # Convert JSON data to message objects with the correct type
-        messages = [message_type_mapping[msg['type']](**msg) for msg in memory_dict['messages']]
+        # Deserialize messages from dictionary
+        messages = messages_from_dict(memory_dict['messages'])
 
         # Extract additional attributes from memory_dict
-        additional_attributes = {key: memory_dict[key] for key in memory_dict if key != 'messages'}
+        additional_attributes = {key: memory_dict[key]
+                                    for key in memory_dict if key != 'messages'}
 
         # Use **kwargs to pass both messages and additional attributes to cls
         return cls(messages=messages, **additional_attributes)
