@@ -9,7 +9,7 @@ from langchain.schema.messages import (
     BaseMessage,
     HumanMessage,
     messages_from_dict,
-    messages_to_dict,
+    _message_to_dict,
 )
 
 
@@ -74,13 +74,9 @@ class BaseChatMessageHistory(ABC):
         """Remove all messages from the store"""
 
     def toJSON(self) -> str:
-        obj_dict = vars(self)
-        serialized_dict = {
-            key: messages_to_dict(value) if key == 'messages' else value
-            for key, value in obj_dict.items()
-        }
-
-        return json.dumps(serialized_dict, sort_keys=True, indent=4)
+        return json.dumps(self, default = lambda o: _message_to_dict(o)
+                                    if isinstance(o, BaseMessage)
+                                    else o.__dict__ , sort_keys=True, indent=4)
 
     @classmethod
     def fromJSON(cls, json_input: str) -> None:
