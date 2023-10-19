@@ -42,7 +42,7 @@ class BaseChatMemory(BaseMemory, ABC):
         self.chat_memory.clear()
 
     def toJSON(self) -> str:
-        # Use the toJSON method from ClassA to get the JSON string of A
+        # Use the toJSON method from chat_memory to get string representation
         chat_memory_json = self.chat_memory.toJSON()
 
         chat_memory_dict = json.loads(chat_memory_json)
