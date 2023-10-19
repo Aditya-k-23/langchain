@@ -1,3 +1,4 @@
+import json
 from abc import ABC
 from typing import Any, Dict, Optional, Tuple
 
@@ -39,3 +40,19 @@ class BaseChatMemory(BaseMemory, ABC):
     def clear(self) -> None:
         """Clear memory contents."""
         self.chat_memory.clear()
+
+    def toJSON(self) -> str:
+        # Use the toJSON method from ClassA to get the JSON string of A
+        chat_memory_json = self.chat_memory.toJSON()
+
+        chat_memory_dict = json.loads(chat_memory_json)
+
+        self_dict = {
+            "chat_memory": chat_memory_dict
+        }
+
+        attributes_to_exclude = ["chat_memory"]
+
+        self_dict.update({key: value for key, value in vars(self).items() if key not in attributes_to_exclude})
+
+        return json.dumps(self_dict, default = lambda o: o.__dict__ , sort_keys=True, indent=4)
