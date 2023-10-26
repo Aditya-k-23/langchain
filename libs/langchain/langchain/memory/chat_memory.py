@@ -1,3 +1,4 @@
+import json
 from abc import ABC
 from typing import Any, Dict, Optional, Tuple
 
@@ -39,3 +40,28 @@ class BaseChatMemory(BaseMemory, ABC):
     def clear(self) -> None:
         """Clear memory contents."""
         self.chat_memory.clear()
+
+    @classmethod
+    def is_lc_serializable(cls) -> bool:
+        """Is this class serializable?"""
+        return True
+
+    def to_json(self):
+        serialized = super().to_json()
+
+        # Use the toJSON method from chat_memory to get string representation
+        chat_memory_obj = self.chat_memory.to_json()
+
+        chat_memory_dict = chat_memory_obj
+
+        self_dict = {
+            "chat_memory": chat_memory_dict
+        }
+
+        self_dict.update({key: value for key, value in vars(self).items()
+                                    if key != "chat_memory"})
+
+        serialized['obj'] = json.loads(json.dumps(self_dict,
+                                        default = lambda o: o.__dict__ , sort_keys=True, indent=4))
+        return serialized
+

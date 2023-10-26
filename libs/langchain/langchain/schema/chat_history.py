@@ -1,12 +1,20 @@
 from __future__ import annotations
 
+import json
 from abc import ABC, abstractmethod
 from typing import List
 
-from langchain.schema.messages import AIMessage, BaseMessage, HumanMessage
+from langchain.load.serializable import Serializable
+from langchain.schema.messages import (
+    AIMessage,
+    BaseMessage,
+    HumanMessage,
+    _message_to_dict,
+)
 
+# messages_from_dict,
 
-class BaseChatMessageHistory(ABC):
+class BaseChatMessageHistory(Serializable, ABC):
     """Abstract base class for storing chat message history.
 
     See `ChatMessageHistory` for default implementation.
@@ -65,3 +73,17 @@ class BaseChatMessageHistory(ABC):
     @abstractmethod
     def clear(self) -> None:
         """Remove all messages from the store"""
+
+    @classmethod
+    def is_lc_serializable(cls) -> bool:
+        """Is this class serializable?"""
+        return True
+
+    def to_json(self):
+        serialized = super().to_json()
+        serialized['obj'] = json.loads(json.dumps(self,
+                                default=lambda o: _message_to_dict(o)
+                                    if isinstance(o, BaseMessage) else o.__dict__,
+                                    sort_keys=True, indent=4))
+
+        return serialized
