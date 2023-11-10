@@ -1671,6 +1671,9 @@
             dict({
               '$ref': '#/definitions/FunctionMessage',
             }),
+            dict({
+              '$ref': '#/definitions/ToolMessage',
+            }),
           ]),
         }),
         'type': 'array',
@@ -1685,8 +1688,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -1716,8 +1736,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -1763,6 +1800,9 @@
                 dict({
                   '$ref': '#/definitions/FunctionMessage',
                 }),
+                dict({
+                  '$ref': '#/definitions/ToolMessage',
+                }),
               ]),
             }),
             'title': 'Messages',
@@ -1791,8 +1831,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -1822,8 +1879,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -1878,8 +1952,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -1894,6 +1985,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -1930,6 +2069,9 @@
             dict({
               '$ref': '#/definitions/FunctionMessage',
             }),
+            dict({
+              '$ref': '#/definitions/ToolMessage',
+            }),
           ]),
         }),
         'type': 'array',
@@ -1944,8 +2086,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -1975,8 +2134,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -2022,6 +2198,9 @@
                 dict({
                   '$ref': '#/definitions/FunctionMessage',
                 }),
+                dict({
+                  '$ref': '#/definitions/ToolMessage',
+                }),
               ]),
             }),
             'title': 'Messages',
@@ -2050,8 +2229,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -2081,8 +2277,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2137,8 +2350,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -2153,6 +2383,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -2177,6 +2455,9 @@
       dict({
         '$ref': '#/definitions/FunctionMessage',
       }),
+      dict({
+        '$ref': '#/definitions/ToolMessage',
+      }),
     ]),
     'definitions': dict({
       'AIMessage': dict({
@@ -2187,8 +2468,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2218,8 +2516,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -2249,8 +2564,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -2280,8 +2612,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2314,8 +2663,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -2330,6 +2696,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -2355,8 +2769,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2386,8 +2817,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -2433,6 +2881,9 @@
                 dict({
                   '$ref': '#/definitions/FunctionMessage',
                 }),
+                dict({
+                  '$ref': '#/definitions/ToolMessage',
+                }),
               ]),
             }),
             'title': 'Messages',
@@ -2461,8 +2912,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -2492,8 +2960,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2548,8 +3033,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -2564,6 +3066,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -2589,8 +3139,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2620,8 +3187,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -2667,6 +3251,9 @@
                 dict({
                   '$ref': '#/definitions/FunctionMessage',
                 }),
+                dict({
+                  '$ref': '#/definitions/ToolMessage',
+                }),
               ]),
             }),
             'title': 'Messages',
@@ -2695,8 +3282,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -2726,8 +3330,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2782,8 +3403,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -2798,6 +3436,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -2815,8 +3501,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -2846,8 +3549,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -2893,6 +3613,9 @@
                 dict({
                   '$ref': '#/definitions/FunctionMessage',
                 }),
+                dict({
+                  '$ref': '#/definitions/ToolMessage',
+                }),
               ]),
             }),
             'title': 'Messages',
@@ -2921,8 +3644,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -2952,8 +3692,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -3019,8 +3776,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -3035,6 +3809,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -3066,6 +3888,9 @@
       dict({
         '$ref': '#/definitions/FunctionMessage',
       }),
+      dict({
+        '$ref': '#/definitions/ToolMessage',
+      }),
     ]),
     'definitions': dict({
       'AIMessage': dict({
@@ -3076,8 +3901,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -3107,8 +3949,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'role': dict({
             'title': 'Role',
@@ -3138,8 +3997,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'name': dict({
             'title': 'Name',
@@ -3169,8 +4045,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'example': dict({
             'default': False,
@@ -3203,8 +4096,25 @@
             'type': 'object',
           }),
           'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
             'title': 'Content',
-            'type': 'string',
           }),
           'type': dict({
             'default': 'system',
@@ -3219,6 +4129,54 @@
           'content',
         ]),
         'title': 'SystemMessage',
+        'type': 'object',
+      }),
+      'ToolMessage': dict({
+        'description': 'A Message for passing the result of executing a tool back to a model.',
+        'properties': dict({
+          'additional_kwargs': dict({
+            'title': 'Additional Kwargs',
+            'type': 'object',
+          }),
+          'content': dict({
+            'anyOf': list([
+              dict({
+                'type': 'string',
+              }),
+              dict({
+                'items': dict({
+                  'anyOf': list([
+                    dict({
+                      'type': 'string',
+                    }),
+                    dict({
+                      'type': 'object',
+                    }),
+                  ]),
+                }),
+                'type': 'array',
+              }),
+            ]),
+            'title': 'Content',
+          }),
+          'tool_call_id': dict({
+            'title': 'Tool Call Id',
+            'type': 'string',
+          }),
+          'type': dict({
+            'default': 'tool',
+            'enum': list([
+              'tool',
+            ]),
+            'title': 'Type',
+            'type': 'string',
+          }),
+        }),
+        'required': list([
+          'content',
+          'tool_call_id',
+        ]),
+        'title': 'ToolMessage',
         'type': 'object',
       }),
     }),
@@ -3748,6 +4706,7 @@
                   ]
                 },
                 "config": {},
+                "config_factories": [],
                 "custom_input_type": null,
                 "custom_output_type": null
               }

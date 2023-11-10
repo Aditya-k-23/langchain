@@ -9,9 +9,10 @@ from typing import IO, TYPE_CHECKING, Any, Callable, List, Optional, Type
 
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
+    CallbackManager,
     CallbackManagerForToolRun,
 )
-from langchain.pydantic_v1 import BaseModel, Field
+from langchain.pydantic_v1 import BaseModel, Field, PrivateAttr
 from langchain.tools import BaseTool, Tool
 from langchain.tools.e2b_data_analysis.unparse import Unparser
 
@@ -97,7 +98,7 @@ class E2BDataAnalysisTool(BaseTool):
     name = "e2b_data_analysis"
     args_schema: Type[BaseModel] = E2BDataAnalysisToolArguments
     session: Any
-    uploaded_files: List[UploadedFile] = Field(default_factory=list)
+    _uploaded_files: List[UploadedFile] = PrivateAttr(default_factory=list)
 
     def __init__(
         self,
@@ -119,7 +120,8 @@ class E2BDataAnalysisTool(BaseTool):
 
         # If no API key is provided, E2B will try to read it from the environment
         # variable E2B_API_KEY
-        session = DataAnalysis(
+        super().__init__(description=base_description, **kwargs)
+        self.session = DataAnalysis(
             api_key=api_key,
             cwd=cwd,
             env_vars=env_vars,
@@ -128,21 +130,19 @@ class E2BDataAnalysisTool(BaseTool):
             on_exit=on_exit,
             on_artifact=on_artifact,
         )
-        super().__init__(session=session, description=base_description, **kwargs)
-        self.uploaded_files = []
 
     def close(self) -> None:
         """Close the cloud sandbox."""
-        self.uploaded_files = []
+        self._uploaded_files = []
         self.session.close()
 
     @property
     def uploaded_files_description(self) -> str:
-        if len(self.uploaded_files) == 0:
+        if len(self._uploaded_files) == 0:
             return ""
         lines = ["The following files available in the sandbox:"]
 
-        for f in self.uploaded_files:
+        for f in self._uploaded_files:
             if f.description == "":
                 lines.append(f"- path: `{f.remote_path}`")
             else:
@@ -152,14 +152,26 @@ class E2BDataAnalysisTool(BaseTool):
         return "\n".join(lines)
 
     def _run(
-        self, python_code: str, run_manager: Optional[CallbackManagerForToolRun] = None
+        self,
+        python_code: str,
+        run_manager: Optional[CallbackManagerForToolRun] = None,
+        callbacks: Optional[CallbackManager] = None,
     ) -> str:
         python_code = add_last_line_print(python_code)
-        stdout, stderr, _ = self.session.run_python(python_code)
+
+        if callbacks is not None:
+            on_artifact = getattr(callbacks.metadata, "on_artifact", None)
+        else:
+            on_artifact = None
+
+        stdout, stderr, artifacts = self.session.run_python(
+            python_code, on_artifact=on_artifact
+        )
 
         out = {
             "stdout": stdout,
             "stderr": stderr,
+            "artifacts": list(map(lambda artifact: artifact.name, artifacts)),
         }
         return json.dumps(out)
 
@@ -206,15 +218,19 @@ class E2BDataAnalysisTool(BaseTool):
             remote_path=remote_path,
             description=description,
         )
-        self.uploaded_files.append(f)
+        self._uploaded_files.append(f)
+        self.description = self.description + "\n" + self.uploaded_files_description
         return f
 
     def remove_uploaded_file(self, uploaded_file: UploadedFile) -> None:
         """Remove uploaded file from the sandbox."""
         self.session.filesystem.remove(uploaded_file.remote_path)
-        self.uploaded_files = [
-            f for f in self.uploaded_files if f.remote_path != uploaded_file.remote_path
+        self._uploaded_files = [
+            f
+            for f in self._uploaded_files
+            if f.remote_path != uploaded_file.remote_path
         ]
+        self.description = self.description + "\n" + self.uploaded_files_description
 
     def as_tool(self) -> Tool:
         return Tool.from_function(
