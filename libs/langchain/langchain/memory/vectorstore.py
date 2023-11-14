@@ -1,13 +1,14 @@
 """Class for a VectorStore-backed memory object."""
 
-from typing import Any, Dict, List, Optional, Sequence, Union
+import json
 
 from langchain.memory.chat_memory import BaseMemory
 from langchain.memory.utils import get_prompt_input_key
 from langchain.pydantic_v1 import Field
 from langchain.schema import Document
+from langchain.load.serializable import Serializable
 from langchain.schema.vectorstore import VectorStoreRetriever
-
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 class VectorStoreRetrieverMemory(BaseMemory):
     """VectorStoreRetriever-backed memory."""
@@ -74,3 +75,20 @@ class VectorStoreRetrieverMemory(BaseMemory):
 
     def clear(self) -> None:
         """Nothing to clear."""
+
+
+    @classmethod
+    def is_lc_serializable(cls) -> bool:
+        """Is this class serializable?"""
+        return True
+
+    def to_json(self):
+        serialized = super().to_json()
+
+        self_dict = {key: value for key, value in vars(self).items()}
+
+        serialized['obj'] = json.loads(json.dumps(self_dict,
+                                        default = lambda o: o.to_json()
+                                                        if isinstance(o, Serializable)
+                                                        else o.__dict__ , sort_keys=True, indent=4))
+        return serialized
