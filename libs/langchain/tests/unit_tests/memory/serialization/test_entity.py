@@ -1,0 +1,18 @@
+import pytest
+
+from langchain.memory import ConversationEntityMemory
+from tests.unit_tests.llms.fake_llm import FakeLLM
+
+TEMPLATE_1 = 'You are an AI assistant helping a human keep track of facts about relevant people, places, and concepts in their life. Update the summary of the provided entity in the "Entity" section based on the last line of your conversation with the human. If you are writing the summary for the first time, return a single sentence.\nThe update should only include facts that are relayed in the last line of conversation about the provided entity, and should only contain facts about the provided entity.\n\nIf there is no new information about the provided entity or the information is not worth noting (not an important or relevant fact to remember long-term), return the existing summary unchanged.\n\nFull conversation history (for context):\n{history}\n\nEntity to summarize:\n{entity}\n\nExisting summary of {entity}:\n{summary}\n\nLast line of conversation:\nHuman: {input}\nUpdated summary:'
+TEMPLATE_2 = 'You are an AI assistant helping a human keep track of facts about relevant people, places, and concepts in their life. Update the summary of the provided entity in the \"Entity\" section based on the last line of your conversation with the human. If you are writing the summary for the first time, return a single sentence.\nThe update should only include facts that are relayed in the last line of conversation about the provided entity, and should only contain facts about the provided entity.\n\nIf there is no new information about the provided entity or the information is not worth noting (not an important or relevant fact to remember long-term), return the existing summary unchanged.\n\nFull conversation history (for context):\n{history}\n\nEntity to summarize:\n{entity}\n\nExisting summary of {entity}:\n{summary}\n\nLast line of conversation:\nHuman: {input}\nUpdated summary:'
+EXPECTED_SERIALIZED_MEMORY = "{'lc': 1, 'type': 'constructor', 'id': ['langchain', 'memory', 'entity', 'ConversationEntityMemory'], 'kwargs': {'llm': FakeLLM(), 'max_token_limit': 100}, 'obj': {'ai_prefix': 'AI', 'chat_history_key': 'history', 'chat_memory': {'id': ['langchain', 'memory', 'chat_message_histories', 'in_memory', 'ChatMessageHistory'], 'kwargs': {}, 'lc': 1, 'obj': {'messages': [{'data': {'additional_kwargs': {}, 'content': 'hi', 'example': False, 'type': 'human'}, 'type': 'human'}, {'data': {'additional_kwargs': {}, 'content': 'whats up', 'example': False, 'type': 'ai'}, 'type': 'ai'}]}, 'type': 'constructor'}, 'entity_cache': [], 'entity_extraction_prompt': {'id': ['langchain', 'prompts', 'prompt', 'PromptTemplate'], 'kwargs': {'input_variables': ['history', 'input'], 'template': " + TEMPLATE_1 + ", 'template_format': 'f-string'}, 'lc': 1, 'type': 'constructor'}, 'entity_store': {'store': {}}, 'entity_summarization_prompt': {'id': ['langchain', 'prompts', 'prompt', 'PromptTemplate'], 'kwargs': {'input_variables': ['entity', 'history', 'input', 'summary'], 'template': " + TEMPLATE_2 + ", 'template_format': 'f-string'}, 'lc': 1, 'type': 'constructor'}, 'human_prefix': 'Human', 'input_key': None, 'k': 3, 'llm': {'id': ['tests', 'unit_tests', 'llms', 'fake_llm', 'FakeLLM'], 'lc': 1, 'repr': 'FakeLLM()', 'type': 'not_implemented'}, 'output_key': None, 'return_messages': False}}"
+
+@pytest.fixture()
+def example_memory():
+    memory = ConversationEntityMemory(llm=FakeLLM(), max_token_limit=100)
+    memory.save_context({'input': 'hi'}, {'output': 'whats up'})
+    return memory
+
+def test_conversion_to_json(example_memory: ConversationEntityMemory):
+    assert str(example_memory.to_json()) == EXPECTED_SERIALIZED_MEMORY
+    
