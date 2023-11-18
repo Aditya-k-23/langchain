@@ -2,6 +2,7 @@ import json
 from abc import ABC
 from typing import Any, Dict, Optional, Tuple
 
+from langchain.load.load import loads
 from langchain.memory.chat_message_histories.in_memory import ChatMessageHistory
 from langchain.memory.utils import get_prompt_input_key
 from langchain.pydantic_v1 import Field
@@ -64,4 +65,21 @@ class BaseChatMemory(BaseMemory, ABC):
         serialized['obj'] = json.loads(json.dumps(self_dict,
                                         default = lambda o: o.__dict__ , sort_keys=True, indent=4))
         return serialized
+    @classmethod
+    def from_json(cls, json_input: str):
+        deserialized = loads(json_input)
 
+        memory_dict = json.loads(json_input)
+
+        chat_memory = BaseChatMessageHistory.from_json(json.dumps
+                                               (memory_dict['obj']['chat_memory']))
+
+        # Extract additional attributes from memory_dict
+        additional_attributes = {key: memory_dict['obj'][key] for key in memory_dict['obj']
+                                 if key != 'chat_memory'}
+
+        deserialized.chat_memory = chat_memory
+
+        deserialized.__dict__.update(additional_attributes)
+
+        return deserialized

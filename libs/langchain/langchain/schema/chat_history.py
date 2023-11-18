@@ -4,15 +4,16 @@ import json
 from abc import ABC, abstractmethod
 from typing import List
 
+from langchain.load.load import loads
 from langchain.load.serializable import Serializable
 from langchain.schema.messages import (
     AIMessage,
     BaseMessage,
     HumanMessage,
     _message_to_dict,
+    messages_from_dict,
 )
 
-# messages_from_dict,
 
 class BaseChatMessageHistory(Serializable, ABC):
     """Abstract base class for storing chat message history.
@@ -87,3 +88,21 @@ class BaseChatMessageHistory(Serializable, ABC):
                                     sort_keys=True, indent=4))
 
         return serialized
+
+    @classmethod
+    def from_json(cls, json_input: str):
+        deserialized = loads(json_input)
+
+        memory_dict = json.loads(json_input)
+
+        messages = messages_from_dict(memory_dict['obj']['messages'])
+
+        # Extract additional attributes from memory_dict
+        additional_attributes = {key: memory_dict[key] for key in memory_dict['obj']
+                                 if key != 'messages'}
+
+        deserialized.messages = messages
+
+        deserialized.__dict__.update(additional_attributes)
+
+        return deserialized
