@@ -14,4 +14,3 @@ def example_memory():
 
 def test_conversion_to_json(example_memory: ConversationTokenBufferMemory):
     assert str(example_memory.to_json()) == EXPECTED_SERIALIZED_MEMORY
-    

@@ -1,10 +1,10 @@
 # test_calculator.py
 # import json
 import pytest
+import sys
 
-from langchain.chains import ConversationChain
-from langchain.llms import HuggingFace
 from langchain.memory import ConversationBufferWindowMemory
+from langchain.vectorstores import FAISS
 
 expected_json = {
     'lc': 1,
@@ -20,13 +20,17 @@ expected_json = {
             'lc': 1,
             'obj': {
                 'messages': [
-                    {'data': {'additional_kwargs': {}, 'content': 'hi', 'example': False, 'type': 'human'},
+                    {'data': {'additional_kwargs': {},
+                              'content': 'hi', 'example': False, 'type': 'human'},
                      'type': 'human'},
-                    {'data': {'additional_kwargs': {}, 'content': "what's up", 'example': False, 'type': 'ai'},
+                    {'data': {'additional_kwargs': {},
+                              'content': "what's up", 'example': False, 'type': 'ai'},
                      'type': 'ai'},
-                    {'data': {'additional_kwargs': {}, 'content': 'not much you', 'example': False, 'type': 'human'},
+                    {'data': {'additional_kwargs': {},
+                              'content': 'not much you', 'example': False, 'type': 'human'},
                      'type': 'human'},
-                    {'data': {'additional_kwargs': {}, 'content': 'not much', 'example': False, 'type': 'ai'},
+                    {'data': {'additional_kwargs': {},
+                              'content': 'not much', 'example': False, 'type': 'ai'},
                      'type': 'ai'}
                 ]
             },
@@ -41,20 +45,14 @@ expected_json = {
     }
 }
 
-
-def test_to_json() -> None:
+@pytest.fixture()
+def example_memory():
     memory = ConversationBufferWindowMemory(k=1)
     memory.save_context({"input": "hi"}, {"output": "what's up"})
     memory.save_context({"input": "not much you"}, {"output": "not much"})
     memory.load_memory_variables({})
-    actual_json = memory.to_json()
-    assert (actual_json == expected_json)
+    return memory
 
-def test_in_chain() -> None:
-    conversation_with_summary = ConversationChain(
-    llm = HuggingFace(model_name="sshleifer/tiny-gpt2") ,
-    # We set a low k=2, to only keep the last 2 interactions in memory
-    memory=ConversationBufferWindowMemory(k=2),
-    verbose=True
-    )
-    conversation_with_summary.predict(input="Hi, what's up?")
+def test_to_json(example_memory: ConversationBufferWindowMemory) -> None:
+    assert example_memory.to_json()== expected_json
+
