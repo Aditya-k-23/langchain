@@ -6,7 +6,7 @@ import sys
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.vectorstores import FAISS
 
-expected_json = {
+EXPECTED_JSON = {
     'lc': 1,
     'type': 'constructor',
     'id': ['langchain', 'memory', 'buffer_window', 'ConversationBufferWindowMemory'],
@@ -54,5 +54,5 @@ def example_memory():
     return memory
 
 def test_to_json(example_memory: ConversationBufferWindowMemory) -> None:
-    assert example_memory.to_json()== expected_json
+    assert example_memory.to_json()== EXPECTED_JSON
 
