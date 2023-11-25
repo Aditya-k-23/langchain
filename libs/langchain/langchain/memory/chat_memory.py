@@ -7,6 +7,7 @@ from langchain.memory.chat_message_histories.in_memory import ChatMessageHistory
 from langchain.memory.utils import get_prompt_input_key
 from langchain.pydantic_v1 import Field
 from langchain.schema import BaseChatMessageHistory, BaseMemory
+from langchain.load.serializable import Serializable
 
 
 class BaseChatMemory(BaseMemory, ABC):
@@ -63,7 +64,7 @@ class BaseChatMemory(BaseMemory, ABC):
                                     if key != "chat_memory"})
 
         serialized['obj'] = json.loads(json.dumps(self_dict,
-                                        default = lambda o: o.__dict__ , sort_keys=True, indent=4))
+                                        default = lambda o: custom_serializer(o), sort_keys=True, indent=4))
         return serialized
     @classmethod
     def from_json(cls, json_input: str):
@@ -83,3 +84,13 @@ class BaseChatMemory(BaseMemory, ABC):
         deserialized.__dict__.update(additional_attributes)
 
         return deserialized
+
+def custom_serializer(obj):
+    if isinstance(obj, Serializable):
+        return obj.to_json()
+    elif isinstance(obj, type):
+        return obj.__name__
+    elif hasattr(obj, '__dict__'):
+        return obj.__dict__
+    else:
+        return TypeError("Object of type '%s' is not JSON serializable" % type(obj).__name__)
