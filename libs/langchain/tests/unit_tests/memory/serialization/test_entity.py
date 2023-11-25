@@ -4,7 +4,7 @@ from langchain.memory import ConversationEntityMemory
 from tests.unit_tests.llms.fake_llm import FakeLLM
 
 
-EXPECTED_SERIALIZED_MEMORY = {
+SERIALIZED_MEMORY_JSON = {
     'lc': 1, 
     'type': 'constructor', 
     'id': ['langchain', 'memory', 'entity', 'ConversationEntityMemory'], 
@@ -66,4 +66,4 @@ def example_memory():
     return memory
 
 def test_conversion_to_json(example_memory: ConversationEntityMemory):
-    assert example_memory.to_json() == EXPECTED_SERIALIZED_MEMORY
+    assert example_memory.to_json() == SERIALIZED_MEMORY_JSON
