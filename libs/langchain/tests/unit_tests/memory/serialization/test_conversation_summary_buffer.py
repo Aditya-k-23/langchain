@@ -105,8 +105,7 @@ data = {
 
 @pytest.fixture()
 def example_memory():
-    bob = FakeLLM()
-    memory = ConversationSummaryBufferMemory(llm=bob, max_token_limit=10)
+    memory = ConversationSummaryBufferMemory(llm=FakeLLM(), max_token_limit=10)
     memory.save_context({"input": "hi"}, {"output": "whats up"})
     memory.save_context({"input": "not much you"}, {"output": "not much"})
     memory.load_memory_variables({})
