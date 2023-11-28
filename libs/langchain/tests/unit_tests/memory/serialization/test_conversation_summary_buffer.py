@@ -1,9 +1,11 @@
+import json
+
 import pytest
 
 from langchain.memory import ConversationSummaryBufferMemory
 from tests.unit_tests.llms.fake_llm import FakeLLM
 
-data = {
+SERIALIZED_MEMORY_JSON = {
     "lc": 1,
     "type": "constructor",
     "id": [
@@ -13,7 +15,7 @@ data = {
         "ConversationSummaryBufferMemory"
     ],
     "kwargs": {
-        "llm": FakeLLM(),
+        "llm": 'FakeLLM',
         "max_token_limit": 10
     },
     "obj": {
@@ -33,7 +35,7 @@ data = {
                     {
                         "data": {
                             "additional_kwargs": {},
-                            "content": "whats up",
+                            "content": "what's up",
                             "example": False,
                             "type": "ai"
                         },
@@ -104,12 +106,18 @@ data = {
 
 
 @pytest.fixture()
-def example_memory():
+def memory():
     memory = ConversationSummaryBufferMemory(llm=FakeLLM(), max_token_limit=10)
-    memory.save_context({"input": "hi"}, {"output": "whats up"})
+    memory.save_context({"input": "hi"}, {"output": "what's up"})
     memory.save_context({"input": "not much you"}, {"output": "not much"})
     memory.load_memory_variables({})
     return memory
 
-def test_conversion_to_json(example_memory):
-    assert example_memory.to_json() == data
+def test_conversion_to_json(memory: ConversationSummaryBufferMemory) -> None:
+    assert memory.to_json() == SERIALIZED_MEMORY_JSON
+
+def test_conversion_from_json(memory: ConversationSummaryBufferMemory) -> None:
+    llm = FakeLLM()
+    json_str = json.dumps(SERIALIZED_MEMORY_JSON)
+    revived_obj = ConversationSummaryBufferMemory.from_json(json_str, llm=llm)
+    assert revived_obj == memory

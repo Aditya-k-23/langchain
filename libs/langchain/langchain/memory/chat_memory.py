@@ -10,6 +10,7 @@ from langchain.memory.utils import get_prompt_input_key
 from langchain.pydantic_v1 import Field
 from langchain.schema import BaseChatMessageHistory, BaseMemory
 from langchain.schema.language_model import BaseLanguageModel
+from langchain.schema.messages import SystemMessage
 
 
 class BaseChatMemory(BaseMemory, ABC):
@@ -66,7 +67,11 @@ class BaseChatMemory(BaseMemory, ABC):
                                     if key != "chat_memory"})
 
         serialized['obj'] = json.loads(json.dumps(self_dict,
-                                        default = lambda o: custom_serializer(o), sort_keys=True, indent=4))
+                                        default = lambda o: custom_serializer(o),
+                                        sort_keys=True, indent=4))
+
+        if (serialized['kwargs']).get('llm'):
+            serialized['kwargs']['llm'] = type(serialized['kwargs']['llm']).__name__
         return serialized
 
     @classmethod
@@ -75,29 +80,37 @@ class BaseChatMemory(BaseMemory, ABC):
 
         if memory_dict.get('id'):
             if cls.__name__ != memory_dict['id'][-1]:
-                raise ValueError(f"Memory object type {cls.__name__} passed differs from type in json {memory_dict['id'][-1]}")
+                raise ValueError(f"Memory object type {cls.__name__} passed differs from\
+                                  type in json {memory_dict['id'][-1]}")
         if memory_dict.get('obj') and (memory_dict['obj']).get('llm'):
             if type(llm).__name__ != memory_dict['obj']['llm']['id'][-1]:
-                warnings.warn(f"llm provided is different from llm in json: {memory_dict['obj']['llm']['repr']}")
+                warnings.warn(f"llm provided is different from llm in\
+                              json: {memory_dict['obj']['llm']['repr']}")
 
             del memory_dict['obj']['llm']
 
         if memory_dict.get('kwargs') and (memory_dict['kwargs']).get('llm'):
             del memory_dict['kwargs']['llm']
 
-        deserialized = loads(json.dumps(memory_dict), llm = llm) if llm is not None else loads(json.dumps(memory_dict))
+        deserialized = loads(json.dumps(memory_dict), llm = llm) if llm is not  None else loads(json.dumps(memory_dict))
 
         chat_memory = BaseChatMessageHistory.from_json(json.dumps
                                                (memory_dict['obj']['chat_memory']))
 
         # Extract additional attributes from memory_dict
-        additional_attributes = {key: memory_dict['obj'][key] for key in memory_dict['obj']
-                                 if key != 'chat_memory'}
-        if (llm is not None) and cls:
+        additional_attributes = {key: memory_dict['obj'][key]
+                                 for key in memory_dict['obj']
+                                 if not (key == chat_memory or
+                                         isinstance(getattr(deserialized, key, None),
+                                                    Serializable))}
+        if (llm is not None) and hasattr(cls, 'llm'):
             additional_attributes['llm'] = llm
 
-        deserialized.chat_memory = chat_memory
+        if additional_attributes.get('summary_message_cls'):
+            del additional_attributes['summary_message_cls']
+            deserialized.summary_message_cls = SystemMessage
 
+        deserialized.chat_memory = chat_memory
         deserialized.__dict__.update(additional_attributes)
 
         return deserialized

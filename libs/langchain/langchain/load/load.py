@@ -74,7 +74,6 @@ class Reviver:
             kwargs = value.get("kwargs", dict())
             if self.llm is not None:
                 kwargs['llm'] = self.llm
-
             return cls(**kwargs)
 
         return value

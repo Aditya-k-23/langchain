@@ -36,5 +36,4 @@ def test_to_json() -> None:
     answer = memory.to_json()
     if 'obj' in answer and 'retriever' in answer['obj']:
         del answer['obj']['retriever']
-    print(answer)
     assert answer == expected
