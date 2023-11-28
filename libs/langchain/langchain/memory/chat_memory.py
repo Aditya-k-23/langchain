@@ -1,17 +1,16 @@
 import json
-
 import warnings
-
 from abc import ABC
 from typing import Any, Dict, Optional, Tuple
 
 from langchain.load.load import loads
+from langchain.load.serializable import Serializable
 from langchain.memory.chat_message_histories.in_memory import ChatMessageHistory
 from langchain.memory.utils import get_prompt_input_key
 from langchain.pydantic_v1 import Field
 from langchain.schema import BaseChatMessageHistory, BaseMemory
-from langchain.load.serializable import Serializable
 from langchain.schema.language_model import BaseLanguageModel
+
 
 class BaseChatMemory(BaseMemory, ABC):
     """Abstract base class for chat memory."""
@@ -79,15 +78,14 @@ class BaseChatMemory(BaseMemory, ABC):
                 raise ValueError(f"Memory object type {cls.__name__} passed differs from type in json {memory_dict['id'][-1]}")
         if memory_dict.get('obj') and (memory_dict['obj']).get('llm'):
             if type(llm).__name__ != memory_dict['obj']['llm']['id'][-1]:
-                # warn bro
-                warnings.warn('llm provided is different from llm in json: ' + memory_dict['obj']['llm']['repr'])
+                warnings.warn(f"llm provided is different from llm in json: {memory_dict['obj']['llm']['repr']}")
 
             del memory_dict['obj']['llm']
 
-        if memory_dict.get('kwargs'):
-            del memory_dict['kwargs']
+        if memory_dict.get('kwargs') and (memory_dict['kwargs']).get('llm'):
+            del memory_dict['kwargs']['llm']
 
-        deserialized = loads(json.dumps(memory_dict))
+        deserialized = loads(json.dumps(memory_dict), llm = llm) if llm is not None else loads(json.dumps(memory_dict))
 
         chat_memory = BaseChatMessageHistory.from_json(json.dumps
                                                (memory_dict['obj']['chat_memory']))
@@ -96,7 +94,7 @@ class BaseChatMemory(BaseMemory, ABC):
         additional_attributes = {key: memory_dict['obj'][key] for key in memory_dict['obj']
                                  if key != 'chat_memory'}
         if (llm is not None) and cls:
-            additional_attributes['llm'] =
+            additional_attributes['llm'] = llm
 
         deserialized.chat_memory = chat_memory
 

@@ -1,14 +1,51 @@
+import json
+
 import pytest
 
 from langchain.memory import ConversationTokenBufferMemory
 from tests.unit_tests.llms.fake_llm import FakeLLM
-
 
 SERIALIZED_MEMORY_JSON = {
     'lc': 1,
     'type': 'constructor',
     'id': ['langchain', 'memory', 'token_buffer', 'ConversationTokenBufferMemory'],
     'kwargs': {'llm': FakeLLM(), 'max_token_limit': 100},
+    'obj': {
+        'ai_prefix': 'AI',
+        'chat_memory': {
+            'id': ['langchain', 'memory', 'chat_message_histories', 'in_memory', 'ChatMessageHistory'],
+            'kwargs': {},
+            'lc': 1,
+            'obj': {
+                'messages': [
+                    {'data': {'additional_kwargs': {}, 'content': 'hi', 'example': False, 'type': 'human'},
+                     'type': 'human'},
+                    {'data': {'additional_kwargs': {}, 'content': 'whats up', 'example': False, 'type': 'ai'},
+                     'type': 'ai'}
+                ],
+            },
+            'type': 'constructor'
+        },
+        'human_prefix': 'Human',
+        'input_key': None,
+        'llm': {
+            'id': ['tests', 'unit_tests', 'llms', 'fake_llm', 'FakeLLM'],
+            'lc': 1,
+            'repr': 'FakeLLM()',
+            'type': 'not_implemented'
+        },
+        'max_token_limit': 100,
+        'memory_key': 'history',
+        'output_key': None,
+        'return_messages': False
+    }
+}
+
+SERIALIZED_MEMORY_JSON_FROM = {
+    'lc': 1,
+    'type': 'constructor',
+    'id': ['langchain', 'memory', 'token_buffer', 'ConversationTokenBufferMemory'],
+    'kwargs': {'llm': 'FakeLLM()','max_token_limit': 100},
     'obj': {
         'ai_prefix': 'AI',
         'chat_memory': {
@@ -49,3 +86,9 @@ def memory():
 
 def test_conversion_to_json(memory: ConversationTokenBufferMemory):
     assert memory.to_json() == SERIALIZED_MEMORY_JSON
+
+def test_conversion_from_json(memory: ConversationTokenBufferMemory):
+    llm = FakeLLM()
+    json_str = json.dumps(SERIALIZED_MEMORY_JSON_FROM)
+    revived_obj = ConversationTokenBufferMemory.from_json(json_str, llm=llm)
+    assert (revived_obj.to_json() == SERIALIZED_MEMORY_JSON)
