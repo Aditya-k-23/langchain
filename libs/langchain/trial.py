@@ -2,10 +2,10 @@ import json
 
 from langchain.memory import ChatMessageHistory, ConversationBufferMemory
 
-'''
+"""
 The code below tests out implementation for to_json and from_json in the
 BaseChatMessageHistory Class
-'''
+"""
 history = ChatMessageHistory(input_key="your_input_key_value")
 history.add_user_message("hi!")
 
@@ -18,7 +18,6 @@ print("Serialized history:")
 print(history.to_json())
 
 
-
 loaded_history = ChatMessageHistory.from_json(json.dumps(history.to_json()))
 
 print("Deserialized history: ")
@@ -27,10 +26,10 @@ print("Original history: ")
 print(history)
 
 
-'''
+"""
 The code below tests out implementation for to_json and from_json in the
 BaseChatMemory Class
-'''
+"""
 print("\n")
 memory = ConversationBufferMemory()
 

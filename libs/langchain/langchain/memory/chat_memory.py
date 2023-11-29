@@ -3,20 +3,16 @@ import warnings
 from abc import ABC
 from typing import Any, Dict, Optional, Tuple
 
-from langchain.load.load import loads
-from langchain.load.serializable import Serializable
-from langchain.memory.chat_message_histories.in_memory import ChatMessageHistory
-from langchain.memory.utils import get_prompt_input_key
-from langchain.pydantic_v1 import Field
-from langchain.schema import BaseChatMessageHistory, BaseMemory
-from langchain.schema.language_model import BaseLanguageModel
-from langchain.schema.messages import SystemMessage
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.memory import BaseMemory
 from langchain_core.pydantic_v1 import Field
 
+from langchain.load.load import loads
+from langchain.load.serializable import Serializable
 from langchain.memory.chat_message_histories.in_memory import ChatMessageHistory
 from langchain.memory.utils import get_prompt_input_key
+from langchain.schema.language_model import BaseLanguageModel
+from langchain.schema.messages import SystemMessage
 
 
 class BaseChatMemory(BaseMemory, Serializable, ABC):
@@ -65,55 +61,71 @@ class BaseChatMemory(BaseMemory, Serializable, ABC):
 
         chat_memory_dict = chat_memory_obj
 
-        self_dict = {
-            "chat_memory": chat_memory_dict
-        }
+        self_dict = {"chat_memory": chat_memory_dict}
 
-        self_dict.update({key: value for key, value in vars(self).items()
-                                    if key != "chat_memory"})
+        self_dict.update(
+            {key: value for key, value in vars(self).items() if key != "chat_memory"}
+        )
 
-        serialized['obj'] = json.loads(json.dumps(self_dict,
-                                        default = lambda o: custom_serializer(o),
-                                        sort_keys=True, indent=4))
+        serialized["obj"] = json.loads(
+            json.dumps(
+                self_dict,
+                default=lambda o: custom_serializer(o),
+                sort_keys=True,
+                indent=4,
+            )
+        )
 
-        if (serialized['kwargs']).get('llm'):
-            serialized['kwargs']['llm'] = type(serialized['kwargs']['llm']).__name__
+        if (serialized["kwargs"]).get("llm"):
+            serialized["kwargs"]["llm"] = type(serialized["kwargs"]["llm"]).__name__
         return serialized
 
     @classmethod
     def from_json(cls, json_input: str, llm: BaseLanguageModel = None):
         memory_dict = json.loads(json_input)
 
-        if memory_dict.get('id'):
-            if cls.__name__ != memory_dict['id'][-1]:
-                raise ValueError(f"Memory object type {cls.__name__} passed differs from\
-                                  type in json {memory_dict['id'][-1]}")
-        if memory_dict.get('obj') and (memory_dict['obj']).get('llm'):
-            if type(llm).__name__ != memory_dict['obj']['llm']['id'][-1]:
-                warnings.warn(f"llm provided is different from llm in\
-                              json: {memory_dict['obj']['llm']['repr']}")
+        if memory_dict.get("id"):
+            if cls.__name__ != memory_dict["id"][-1]:
+                raise ValueError(
+                    f"Memory object type {cls.__name__} passed differs from\
+                                  type in json {memory_dict['id'][-1]}"
+                )
+        if memory_dict.get("obj") and (memory_dict["obj"]).get("llm"):
+            if type(llm).__name__ != memory_dict["obj"]["llm"]["id"][-1]:
+                warnings.warn(
+                    f"llm provided is different from llm in\
+                              json: {memory_dict['obj']['llm']['repr']}"
+                )
 
-            del memory_dict['obj']['llm']
+            del memory_dict["obj"]["llm"]
 
-        if memory_dict.get('kwargs') and (memory_dict['kwargs']).get('llm'):
-            del memory_dict['kwargs']['llm']
+        if memory_dict.get("kwargs") and (memory_dict["kwargs"]).get("llm"):
+            del memory_dict["kwargs"]["llm"]
 
-        deserialized = loads(json.dumps(memory_dict), llm = llm) if llm is not  None else loads(json.dumps(memory_dict))
+        deserialized = (
+            loads(json.dumps(memory_dict), llm=llm)
+            if llm is not None
+            else loads(json.dumps(memory_dict))
+        )
 
-        chat_memory = BaseChatMessageHistory.from_json(json.dumps
-                                               (memory_dict['obj']['chat_memory']))
+        chat_memory = BaseChatMessageHistory.from_json(
+            json.dumps(memory_dict["obj"]["chat_memory"])
+        )
 
         # Extract additional attributes from memory_dict
-        additional_attributes = {key: memory_dict['obj'][key]
-                                 for key in memory_dict['obj']
-                                 if not (key == chat_memory or
-                                         isinstance(getattr(deserialized, key, None),
-                                                    Serializable))}
-        if (llm is not None) and hasattr(cls, 'llm'):
-            additional_attributes['llm'] = llm
+        additional_attributes = {
+            key: memory_dict["obj"][key]
+            for key in memory_dict["obj"]
+            if not (
+                key == chat_memory
+                or isinstance(getattr(deserialized, key, None), Serializable)
+            )
+        }
+        if (llm is not None) and hasattr(cls, "llm"):
+            additional_attributes["llm"] = llm
 
-        if additional_attributes.get('summary_message_cls'):
-            del additional_attributes['summary_message_cls']
+        if additional_attributes.get("summary_message_cls"):
+            del additional_attributes["summary_message_cls"]
             deserialized.summary_message_cls = SystemMessage
 
         deserialized.chat_memory = chat_memory
@@ -121,12 +133,15 @@ class BaseChatMemory(BaseMemory, Serializable, ABC):
 
         return deserialized
 
+
 def custom_serializer(obj):
     if isinstance(obj, Serializable):
         return obj.to_json()
     elif isinstance(obj, type):
         return obj.__name__
-    elif hasattr(obj, '__dict__'):
+    elif hasattr(obj, "__dict__"):
         return obj.__dict__
     else:
-        return TypeError("Object of type '%s' is not JSON serializable" % type(obj).__name__)
+        return TypeError(
+            "Object of type '%s' is not JSON serializable" % type(obj).__name__
+        )
