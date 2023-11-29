@@ -9,7 +9,7 @@ SERIALIZED_MEMORY_JSON = {
     'lc': 1,
     'type': 'constructor',
     'id': ['langchain', 'memory', 'summary', 'ConversationSummaryMemory'],
-    'kwargs': {'llm':'FakeLLM'},
+    'kwargs': {'llm': 'FakeLLM'},
     'obj': {
         'ai_prefix': 'AI',
         'buffer': 'foo',
@@ -19,14 +19,10 @@ SERIALIZED_MEMORY_JSON = {
             'lc': 1,
             'obj': {
                 'messages': [
-                    {
-                        'data': {'additional_kwargs': {}, 'content': 'hi', 'example': False, 'type': 'human'},
-                        'type': 'human'
-                    },
-                    {
-                        'data': {'additional_kwargs': {}, 'content': "what is up", 'example': False, 'type': 'ai'},
-                        'type': 'ai'
-                    }
+                    {'data': {'additional_kwargs': {}, 'content': 'hi', 'example': False, 'type': 'human'},
+                     'type': 'human'},
+                    {'data': {'additional_kwargs': {}, 'content': "what is up", 'example': False, 'type': 'ai'},
+                     'type': 'ai'}
                 ]
             },
             'type': 'constructor'
@@ -42,10 +38,19 @@ SERIALIZED_MEMORY_JSON = {
         'memory_key': 'history',
         'output_key': None,
         'prompt': {
-            'id': ['langchain', 'prompts', 'prompt', 'PromptTemplate'],
+            'id': ['langchain_core', 'prompts', 'prompt', 'PromptTemplate'],
             'kwargs': {
                 'input_variables': ['new_lines', 'summary'],
-                'template': 'Progressively summarize the lines of conversation provided, adding onto the previous summary returning a new summary.\n\nEXAMPLE\nCurrent summary:\nThe human asks what the AI thinks of artificial intelligence. The AI thinks artificial intelligence is a force for good.\n\nNew lines of conversation:\nHuman: Why do you think artificial intelligence is a force for good?\nAI: Because artificial intelligence will help humans reach their full potential.\n\nNew summary:\nThe human asks what the AI thinks of artificial intelligence. The AI thinks artificial intelligence is a force for good because it will help humans reach their full potential.\nEND OF EXAMPLE\n\nCurrent summary:\n{summary}\n\nNew lines of conversation:\n{new_lines}\n\nNew summary:',
+                'template': ('Progressively summarize the lines of conversation provided, adding onto the previous '
+                             'summary returning a new summary.\n\nEXAMPLE\nCurrent summary:\nThe human asks what '
+                             'the AI thinks of artificial intelligence. The AI thinks artificial intelligence is '
+                             'a force for good.\n\nNew lines of conversation:\nHuman: Why do you think artificial '
+                             'intelligence is a force for good?\nAI: Because artificial intelligence will help humans '
+                             'reach their full potential.\n\nNew summary:\nThe human asks what the AI thinks of '
+                             'artificial intelligence. The AI thinks artificial intelligence is a force for good '
+                             'because it will help humans reach their full potential.\nEND OF EXAMPLE\n\nCurrent summary:'
+                             '\n{summary}\n\nNew lines of conversation:\n{new_lines}\n\nNew summary:'
+                             ),
                 'template_format': 'f-string'
             },
             'lc': 1,
@@ -55,6 +60,7 @@ SERIALIZED_MEMORY_JSON = {
         'summary_message_cls': 'SystemMessage'
     }
 }
+
 
 @pytest.fixture()
 def memory():
