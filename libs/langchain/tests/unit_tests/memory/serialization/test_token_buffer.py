@@ -65,18 +65,19 @@ SERIALIZED_MEMORY_JSON = {
 
 
 @pytest.fixture()
-def memory():
+def memory() -> ConversationTokenBufferMemory:
     memory = ConversationTokenBufferMemory(llm=FakeLLM(), max_token_limit=100)
     memory.save_context({"input": "hi"}, {"output": "whats up"})
     memory.load_memory_variables({})
     return memory
 
 
-def test_conversion_to_json(memory: ConversationTokenBufferMemory):
+def test_conversion_to_json(memory: ConversationTokenBufferMemory) -> None:
     assert memory.to_json() == SERIALIZED_MEMORY_JSON
 
 
-def test_conversion_from_json_fail(memory: ConversationTokenBufferMemory):
+@pytest.mark.requires("openai")
+def test_conversion_from_json_fail(memory: ConversationTokenBufferMemory) -> None:
     os.environ["OPENAI_API_KEY"] = "some_key"
     llm = OpenAI()
     json_str = json.dumps(SERIALIZED_MEMORY_JSON)
@@ -84,7 +85,7 @@ def test_conversion_from_json_fail(memory: ConversationTokenBufferMemory):
     assert revived_obj != memory
 
 
-def test_conversion_from_json(memory: ConversationTokenBufferMemory):
+def test_conversion_from_json(memory: ConversationTokenBufferMemory) -> None:
     llm = FakeLLM()
     json_str = json.dumps(SERIALIZED_MEMORY_JSON)
     revived_obj = ConversationTokenBufferMemory.from_json(json_str, llm=llm)

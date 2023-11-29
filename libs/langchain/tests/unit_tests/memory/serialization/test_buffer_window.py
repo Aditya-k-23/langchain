@@ -74,7 +74,7 @@ SERIALIZED_MEMORY_JSON = {
 
 
 @pytest.fixture()
-def memory():
+def memory() -> ConversationBufferWindowMemory:
     memory = ConversationBufferWindowMemory(k=1)
     memory.save_context({"input": "hi"}, {"output": "what's up"})
     memory.save_context({"input": "not much you"}, {"output": "not much"})

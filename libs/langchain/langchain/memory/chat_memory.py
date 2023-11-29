@@ -53,7 +53,7 @@ class BaseChatMemory(BaseMemory, Serializable, ABC):
         """Is this class serializable?"""
         return True
 
-    def to_json(self):
+    def to_json(self) -> Dict[str, Any]:
         serialized = super().to_json()
 
         # Use the toJSON method from chat_memory to get string representation
@@ -81,7 +81,7 @@ class BaseChatMemory(BaseMemory, Serializable, ABC):
         return serialized
 
     @classmethod
-    def from_json(cls, json_input: str, llm: BaseLanguageModel = None):
+    def from_json(cls, json_input: str, llm: BaseLanguageModel = None) -> Any:
         memory_dict = json.loads(json_input)
 
         if memory_dict.get("id"):
@@ -134,7 +134,7 @@ class BaseChatMemory(BaseMemory, Serializable, ABC):
         return deserialized
 
 
-def custom_serializer(obj):
+def custom_serializer(obj: Any) -> Any:
     if isinstance(obj, Serializable):
         return obj.to_json()
     elif isinstance(obj, type):

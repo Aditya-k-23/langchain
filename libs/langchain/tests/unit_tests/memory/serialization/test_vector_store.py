@@ -1,4 +1,5 @@
 import faiss
+import pytest
 
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings.fake import FakeEmbeddings
@@ -21,6 +22,7 @@ expected = {
 }
 
 
+@pytest.mark.requires("faiss-cpu")
 def test_to_json() -> None:
     index = faiss.IndexFlatL2(embedding_size)
     embeddings = FakeEmbeddings(size=embedding_size)

@@ -83,7 +83,7 @@ class VectorStoreRetrieverMemory(BaseMemory):
         """Is this class serializable?"""
         return True
 
-    def to_json(self):
+    def to_json(self) -> Dict[str, Any]:
         serialized = super().to_json()
 
         self_dict = {key: value for key, value in vars(self).items()}

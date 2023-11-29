@@ -93,14 +93,14 @@ SERIALIZED_MEMORY_JSON = {
 
 
 @pytest.fixture()
-def memory():
+def memory() -> ConversationSummaryMemory:
     memory = ConversationSummaryMemory(llm=FakeLLM())
     memory.save_context({"input": "hi"}, {"output": "what is up"})
     memory.load_memory_variables({})
     return memory
 
 
-def test_conversion_to_json(memory):
+def test_conversion_to_json(memory: ConversationSummaryMemory) -> None:
     assert memory.to_json() == SERIALIZED_MEMORY_JSON
 
 

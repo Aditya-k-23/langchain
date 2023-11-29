@@ -103,7 +103,7 @@ SERIALIZED_MEMORY_JSON = {
 
 
 @pytest.fixture()
-def memory():
+def memory() -> ConversationSummaryBufferMemory:
     memory = ConversationSummaryBufferMemory(llm=FakeLLM(), max_token_limit=10)
     memory.save_context({"input": "hi"}, {"output": "what's up"})
     memory.save_context({"input": "not much you"}, {"output": "not much"})

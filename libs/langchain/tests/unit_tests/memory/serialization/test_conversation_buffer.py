@@ -62,11 +62,11 @@ def memory() -> ConversationBufferMemory:
     return memory
 
 
-def test_conversion_to_json(memory: ConversationBufferMemory):
+def test_conversion_to_json(memory: ConversationBufferMemory) -> None:
     assert memory.to_json() == SERIALIZED_MEMORY_JSON
 
 
-def test_conversion_from_json(memory: ConversationBufferMemory):
+def test_conversion_from_json(memory: ConversationBufferMemory) -> None:
     json_str = json.dumps(SERIALIZED_MEMORY_JSON)
     revived_obj = ConversationBufferMemory.from_json(json_str)
     assert revived_obj == memory
